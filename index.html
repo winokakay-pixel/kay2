@@ -69,7 +69,7 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* FOTO KECIL – RASIO 4:3 */
+        /* FOTO - TAMBAHKAN AREA UPLOAD */
         .photo-wrapper {
             width: 65%;
             aspect-ratio: 4 / 3;
@@ -77,12 +77,49 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         .photo-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: none;
+        }
+
+        .photo-wrapper.has-image img {
+            display: block;
+        }
+
+        .upload-prompt {
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .photo-wrapper.has-image .upload-prompt {
+            display: none;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .upload-btn {
+            background: white;
+            color: #764ba2;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: bold;
         }
 
         h1 {
@@ -149,10 +186,15 @@
         Voor Febe Vermesen, mijn schatje
     </p>
 
-    <!-- FOTO DARI URL (AMAT AMAN) -->
-    <div class="photo-wrapper">
-        <img src="https://i.imgur.com/O9d0ZLb.jpg" alt="Memory">
+    <!-- FOTO DENGAN OPSI UPLOAD -->
+    <div class="photo-wrapper" id="photoWrapper" onclick="document.getElementById('fileInput').click()">
+        <img id="photoImg" alt="Memory">
+        <div class="upload-prompt">
+            📷<br>
+            <span class="upload-btn">Klik untuk menambahkan foto</span>
+        </div>
     </div>
+    <input type="file" id="fileInput" accept="image/*">
 
     <h1>Zullen we het opnieuw proberen?</h1>
 
@@ -161,13 +203,27 @@
         <button class="no-btn" id="noBtn" onclick="handleNo()">Nee</button>
     </div>
 
-    <!-- TEKS SUDAH DIGANTI -->
     <div class="message" id="yesMessage">
         💖 Ik hoop dat onze relatie voor altijd zal duren, ik hou van jou 💖
     </div>
 </div>
 
 <script>
+    // Handle file upload
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.getElementById('photoImg');
+                const wrapper = document.getElementById('photoWrapper');
+                img.src = event.target.result;
+                wrapper.classList.add('has-image');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     function createHeart() {
         const heart = document.createElement('div');
         heart.className = 'heart';
@@ -183,6 +239,11 @@
     function handleYes() {
         document.getElementById('yesMessage').style.display = 'block';
         document.querySelector('.buttons').style.display = 'none';
+        
+        // Create burst of hearts
+        for (let i = 0; i < 30; i++) {
+            setTimeout(createHeart, i * 100);
+        }
     }
 
     function handleNo() {
