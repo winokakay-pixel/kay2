@@ -1,257 +1,110 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zullen we het opnieuw proberen?</title>
+  <meta charset="UTF-8">
+  <title>Pertanyaan Manis</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffc0cb, #ffb6c1);
+      overflow: hidden;
+      position: relative;
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    p {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
 
-        body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+    button {
+      padding: 12px 28px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      transition: transform 0.2s, background 0.3s;
+    }
 
-        .hearts {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
+    .iya {
+      background-color: #ff69b4;
+      color: white;
+    }
 
-        .heart {
-            position: absolute;
-            font-size: 20px;
-            opacity: 0.35;
-            animation: float 15s infinite;
-        }
+    .tidak {
+      background-color: #ff1493;
+      color: white;
+    }
 
-        @keyframes float {
-            0% { transform: translateY(100vh); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh); opacity: 0; }
-        }
+    button:hover {
+      transform: scale(1.1);
+      background-color: #ff85c1;
+    }
 
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 50px 45px;
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            max-width: 500px;
-            animation: fadeIn 1s ease-in;
-        }
+    #jawaban {
+      margin-top: 25px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #b3005e;
+      opacity: 0;
+      transition: opacity 0.6s ease-in;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.85); }
-            to { opacity: 1; transform: scale(1); }
-        }
+    /* Emoji jatuh */
+    .love {
+      position: absolute;
+      font-size: 24px;
+      animation: fall 5s linear infinite;
+    }
 
-        .emoji {
-            font-size: 55px;
-            margin-bottom: 12px;
-            animation: bounce 1s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* FOTO - TAMBAHKAN AREA UPLOAD */
-        .photo-wrapper {
-            width: 65%;
-            aspect-ratio: 4 / 3;
-            margin: 20px auto 25px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .photo-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        .photo-wrapper.has-image img {
-            display: block;
-        }
-
-        .upload-prompt {
-            color: white;
-            font-size: 16px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .photo-wrapper.has-image .upload-prompt {
-            display: none;
-        }
-
-        #fileInput {
-            display: none;
-        }
-
-        .upload-btn {
-            background: white;
-            color: #764ba2;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 10px;
-            display: inline-block;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        h1 {
-            color: #764ba2;
-            font-size: 28px;
-            margin: 25px 0;
-            line-height: 1.4;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 35px;
-        }
-
-        button {
-            padding: 14px 38px;
-            font-size: 18px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            font-family: 'Georgia', serif;
-        }
-
-        .yes-btn {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-
-        .yes-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
-        }
-
-        .no-btn {
-            background: #e0e0e0;
-            color: #666;
-        }
-
-        .message {
-            display: none;
-            margin-top: 30px;
-            padding: 22px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            border-radius: 18px;
-            font-size: 20px;
-            line-height: 1.4;
-        }
-    </style>
+    @keyframes fall {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
 </head>
-
 <body>
-<div class="hearts" id="hearts"></div>
 
-<div class="container">
-    <div class="emoji">💕</div>
+  <p>Kamu tau ga bedanya kamu sama es krim?</p>
 
-    <p style="color:#999; font-size:14px;">zaterdag, 3 januari 2026</p>
-    <p style="color:#764ba2; font-size:17px; font-style:italic; margin-bottom:12px;">
-        Voor Febe Vermesen, mijn schatje
-    </p>
+  <button class="iya" onclick="iya()">Iya</button>
+  <button class="tidak" onclick="tidak()">Tidak</button>
 
-    <!-- FOTO DENGAN OPSI UPLOAD -->
-    <div class="photo-wrapper" id="photoWrapper" onclick="document.getElementById('fileInput').click()">
-        <img id="photoImg" alt="Memory">
-        <div class="upload-prompt">
-            📷<br>
-            <span class="upload-btn">Klik untuk menambahkan foto</span>
-        </div>
-    </div>
-    <input type="file" id="fileInput" accept="image/*">
+  <div id="jawaban"></div>
 
-    <h1>Zullen we het opnieuw proberen?</h1>
-
-    <div class="buttons">
-        <button class="yes-btn" onclick="handleYes()">Ja! ❤️</button>
-        <button class="no-btn" id="noBtn" onclick="handleNo()">Nee</button>
-    </div>
-
-    <div class="message" id="yesMessage">
-        💖 Ik hoop dat onze relatie voor altijd zal duren, ik hou van jou 💖
-    </div>
-</div>
-
-<script>
-    // Handle file upload
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.getElementById('photoImg');
-                const wrapper = document.getElementById('photoWrapper');
-                img.src = event.target.result;
-                wrapper.classList.add('has-image');
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.textContent = '❤️';
-        heart.style.left = Math.random() * 100 + '%';
-        document.getElementById('hearts').appendChild(heart);
-        setTimeout(() => heart.remove(), 20000);
+  <script>
+    // Fungsi tombol
+    function iya() {
+      document.getElementById("jawaban").style.opacity = 0;
     }
 
-    for (let i = 0; i < 15; i++) createHeart();
-    setInterval(createHeart, 2000);
-
-    function handleYes() {
-        document.getElementById('yesMessage').style.display = 'block';
-        document.querySelector('.buttons').style.display = 'none';
-        
-        // Create burst of hearts
-        for (let i = 0; i < 30; i++) {
-            setTimeout(createHeart, i * 100);
-        }
+    function tidak() {
+      const jawaban = document.getElementById("jawaban");
+      jawaban.innerHTML = "Ga ada bedanya, sama-sama manis 🍦";
+      jawaban.style.opacity = 1;
     }
 
-    function handleNo() {
-        const btn = document.getElementById('noBtn');
-        btn.style.position = 'fixed';
-        btn.style.left = Math.random() * (window.innerWidth - 200) + 'px';
-        btn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+    // Membuat emoji love jatuh
+    function createLove() {
+      const love = document.createElement("div");
+      love.classList.add("love");
+      love.style.left = Math.random() * window.innerWidth + "px";
+      love.innerText = "💖";
+      document.body.appendChild(love);
+      setTimeout(() => love.remove(), 5000);
     }
-</script>
+
+    setInterval(createLove, 500); // muncul tiap 0.5 detik
+  </script>
+
 </body>
 </html>
